@@ -3,7 +3,6 @@ import React from 'react';
 import { auth, provider } from '../firebase';
 import { signInWithPopup, signOut } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
-import Signin from './Signin';
 
 // Initialize Firestore
 const db = getFirestore();
@@ -59,8 +58,7 @@ const ProblemTracker = () => {
     if (user) {
       await setDoc(doc(db, "users", user.uid), { problemCount: newCount });
     }
-  }
-
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white overflow-hidden relative">
@@ -70,8 +68,8 @@ const ProblemTracker = () => {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600 rounded-full blur-3xl"></div>
         <div className="absolute top-3/4 left-2/3 w-64 h-64 bg-emerald-600 rounded-full blur-3xl"></div>
       </div>
-      
-      {/* Floating code snippets in background */}
+
+      {/* Floating code snippets */}
       <div className="absolute inset-0 overflow-hidden opacity-10">
         {[...Array(8)].map((_, i) => (
           <div key={i} className="absolute text-xs font-mono" style={{
@@ -83,7 +81,7 @@ const ProblemTracker = () => {
           </div>
         ))}
       </div>
-      
+
       <div className="relative z-10">
         <nav className="px-6 py-4 flex justify-between items-center border-b border-slate-800">
           <div className="flex items-center">
@@ -92,43 +90,47 @@ const ProblemTracker = () => {
             </div>
             <span className="ml-3 font-bold text-xl">DrBuddy</span>
           </div>
-          
-          <div className="hidden md:flex space-x-8 text-sm">
-            <a href="#features" className="text-slate-300 hover:text-white transition-colors">Features</a>
-            <a href="#dashboard" className="text-slate-300 hover:text-white transition-colors">Dashboard</a>
-            <a href="#testimonials" className="text-slate-300 hover:text-white transition-colors">Testimonials</a>
-            <a href="#pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</a>
+
+          <div className="flex items-center space-x-4">
+            {user ? (
+              <button onClick={logout} className="text-white bg-slate-800 px-4 py-2 rounded-md hover:bg-slate-700">
+                Sign Out
+              </button>
+            ) : (
+              <button onClick={signInWithGoogle} className="text-white bg-emerald-600 px-4 py-2 rounded-md hover:bg-emerald-700">
+                Sign In with Google
+              </button>
+            )}
           </div>
-          <Signin/>
         </nav>
-        
+
         <main>
-          {/* Hero section */}
+          {/* Hero Section */}
           <section className="py-16 px-6">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
               <div className="md:w-1/2 space-y-6">
                 <div className="inline-block px-3 py-1 rounded-full bg-slate-800 text-emerald-400 text-xs font-medium">
                   BETA ACCESS AVAILABLE NOW
                 </div>
-                
+
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                   Track. Solve. <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">Conquer.</span>
                 </h1>
-                
+
                 <p className="text-slate-300 text-lg md:text-xl max-w-xl">
                   The intelligent problem-tracking extension that helps developers monitor their coding challenges and maximize productivity.
                 </p>
-                
+
                 <div className="pt-4 flex flex-wrap gap-4">
                   <button className="bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-all shadow-lg hover:shadow-xl">
                     Install Extension
                   </button>
-                  
+
                   <button className="bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 px-8 rounded-lg transition-all">
                     View Demo
                   </button>
                 </div>
-                
+
                 <div className="pt-6 flex items-center space-x-4 text-sm text-slate-400">
                   <div className="flex -space-x-2">
                     {[...Array(4)].map((_, i) => (
@@ -138,13 +140,13 @@ const ProblemTracker = () => {
                   <p>Join <span className="text-emerald-400 font-medium">2,400+</span> developers</p>
                 </div>
               </div>
-              
+
               <div className="md:w-1/2 relative">
                 <div className="absolute -top-6 -right-6 bg-slate-900/50 backdrop-blur-sm border border-slate-700 rounded-lg px-4 py-2 flex items-center space-x-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="font-medium">Problems Tracked: <span className="text-emerald-400">{problemCount}</span></span>
                 </div>
-                
+
                 <div className="bg-slate-900 border border-slate-800 rounded-xl shadow-2xl overflow-hidden">
                   <div className="bg-slate-800 px-4 py-2 flex items-center justify-between">
                     <div className="flex space-x-2">
@@ -154,13 +156,13 @@ const ProblemTracker = () => {
                     </div>
                     <div className="text-xs font-medium text-slate-400">Your Problem Tracker Dashboard</div>
                   </div>
-                  
+
                   <div className="p-6">
                     <div className="flex justify-between items-center mb-6">
                       <h3 className="font-medium">Recent Activity</h3>
                       <div className="text-xs text-slate-400">Today</div>
                     </div>
-                    
+
                     <div className="space-y-4">
                       {['Binary Search Tree', 'Dynamic Programming', 'Linked List Reversal'].map((problem, i) => (
                         <div key={i} className="flex items-center p-3 rounded-lg bg-slate-800 border border-slate-700">
@@ -180,77 +182,51 @@ const ProblemTracker = () => {
               </div>
             </div>
           </section>
-          
-          {/* Features */}
+
+          {/* Features Section */}
           <section id="features" className="py-20 px-6 bg-slate-900/50">
             <div className="max-w-7xl mx-auto text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Supercharge Your Coding Journey</h2>
               <p className="text-slate-300 max-w-2xl mx-auto">Powerful features designed to help you track, analyze, and improve your problem-solving skills.</p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
               {[
-                {
-                  icon: "📊",
-                  title: "Advanced Analytics",
-                  desc: "Track your progress with detailed statistics and visualizations."
-                },
-                {
-                  icon: "🔔",
-                  title: "Smart Notifications",
-                  desc: "Get custom alerts based on your activity and goals."
-                },
-                {
-                  icon: "🔄",
-                  title: "Cross-Platform Sync",
-                  desc: "Seamlessly track problems across multiple coding websites."
-                },
-                {
-                  icon: "📱",
-                  title: "Mobile Companion",
-                  desc: "Keep track of your progress on all your devices."
-                },
-                {
-                  icon: "🏆",
-                  title: "Achievement System",
-                  desc: "Earn badges and level up as you solve more problems."
-                },
-                {
-                  icon: "👥",
-                  title: "Community Challenges",
-                  desc: "Compete with friends and the global developer community."
-                }
+             {
+              icon: "🔗",
+              title: "Add Question Links",
+              desc: "Easily track questions from platforms like LeetCode, GeeksforGeeks, Codeforces, and more.",
+            },
+            {
+              icon: "🧠",
+              title: "Add Notes",
+              desc: "Write notes about your approach, ideas, or solutions for each problem.",
+            },
+            {
+              icon: "📅",
+              title: "Set Reminders",
+              desc: "Set custom reminders to revisit problems after a day, week, or month.",
+            },
+            {
+              icon: "🔔",
+              title: "Chrome Notifications",
+              desc: "Get notified to revise even if the extension popup is closed.",
+            },
+            {
+              icon: "🧳",
+              title: "Local Storage",
+              desc: "All your data is saved locally in your browser – nothing gets lost.",
+            },
               ].map((feature, i) => (
-                <div key={i} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 transition-all hover:bg-slate-800 hover:translate-y-[-4px]">
+                <div key={i} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:bg-slate-800 transition-all hover:translate-y-[-4px]">
                   <div className="text-3xl mb-4">{feature.icon}</div>
-                  <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                  <p className="text-slate-300">{feature.desc}</p>
+                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-slate-300 text-sm">{feature.desc}</p>
                 </div>
               ))}
             </div>
           </section>
-          
-          {/* CTA */}
-          <section className="py-20 px-6">
-            <div className="max-w-5xl mx-auto bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-10 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to level up your coding practice?</h2>
-              <p className="text-slate-300 max-w-2xl mx-auto mb-8">Join thousands of developers who are tracking and improving their problem-solving skills with DrBuddy.</p>
-              
-              <button className="bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-all shadow-lg hover:shadow-xl">
-                Get Started — It's Free
-              </button>
-              
-              <p className="mt-4 text-sm text-slate-400">No credit card required. Free forever.</p>
-            </div>
-          </section>
         </main>
-        
-        <footer className="border-t border-slate-800 py-12 px-6">          
-          <div className="max-w-7xl mx-auto mt-12 pt-6 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-slate-400">© 2025 DR Buddy. All rights reserved.</p>
-        
-          </div>
-        </footer>
       </div>
     </div>
   );

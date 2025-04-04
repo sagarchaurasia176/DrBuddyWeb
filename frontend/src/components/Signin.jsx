@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { use, useState } from 'react';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../firebase';
 
 const Signin = () => {
+  const [user, setUser] = useState(localStorage.getItem('username') || "");
+
   const handleSignIn = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        console.log("User signed in:", result.user.displayName);
+        const username = result.user.displayName;
+        setUser(username);
+        localStorage.setItem('username', username); // Store username in localStorage
       })
       .catch((error) => {
         console.error("Error during sign-in:", error);
@@ -16,12 +20,20 @@ const Signin = () => {
 
   return (
     <div>
-      <button 
-        onClick={handleSignIn}
-        className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
-      >
-        Sign in with Google
-      </button>
+      {user ? (
+        <>
+          <span className="text-green-500 font-bold">Welcome, {user}!</span>
+        </>
+      ) : (
+        <>
+          <button 
+            onClick={handleSignIn}
+            className="bg-slate-900 cursor-pointer hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+          >
+            Sign in with Google
+          </button>
+        </>
+      )}
     </div>
   );
 };
