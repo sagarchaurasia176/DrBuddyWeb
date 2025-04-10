@@ -7,7 +7,7 @@ import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from 'firebase
 // Initialize Firestore
 const db = getFirestore();
 
-export const ProblemTracker = () => {
+const ProblemTracker = () => {
   const [user, setUser] = useState(null);
   const [problemCount, setProblemCount] = useState(0);
   const [showAddProblem, setShowAddProblem] = useState(false);
@@ -743,3 +743,5 @@ export const ProblemTracker = () => {
 </div>
 </div>          
   )}
+
+  export default ProblemTracker;
